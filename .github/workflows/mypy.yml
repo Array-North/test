@@ -19,5 +19,5 @@ jobs:
     - name: mypy
       continue-on-error: true
       run: |
-        mypy $(git ls-files '*.py')
+        mypy $(git ls-files '*.py') --strict --ignore-missing-imports --pretty
 
