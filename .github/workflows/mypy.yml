@@ -17,6 +17,7 @@ jobs:
         pip install --upgrade pip
         pip install mypy
     - name: mypy
+      continue-on-error: true
       run: |
         mypy $(git ls-files '*.py')
 
