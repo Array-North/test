@@ -32,7 +32,7 @@ jobs:
         id: mypy
         continue-on-error: true
         run: |
-          echo "::set-output name=content::$(mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty)"
+          echo "mypy_output=$(mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty)" >> $GITHUB_ENV
           
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -49,5 +49,5 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             mypy:
-              ${{ steps.mypy.outputs.content }}
+              ${{ env.mypy_output }}
           edit-mode: replace
