@@ -33,7 +33,11 @@ jobs:
         continue-on-error: true
         run: |
           mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty 2>&1 | tee mypy_output.log
-          echo "::set-output name=mypy_output::$(cat mypy_output.log)"
+          REPORT="$(cat mypy_output.log)"
+          echo "::set-output name=REPORT::$REPORT"
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
           
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -50,5 +54,5 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             mypy:
-              ${{ steps.mypy.outputs.mypy_output }}
+              ${{ steps.mypy.outputs.REPORT }}
           edit-mode: replace
