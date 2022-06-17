@@ -14,6 +14,9 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v23
+        with:
+          files: |
+            '**.py'
 
       - name: List all changed files
         run: |
@@ -32,5 +35,5 @@ jobs:
       - name: mypy
         continue-on-error: true
         run: |
-          mypy $(git ls-files '*.py') --strict --ignore-missing-imports --pretty
+          mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty
 
