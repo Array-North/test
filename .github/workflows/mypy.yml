@@ -16,7 +16,7 @@ jobs:
         uses: tj-actions/changed-files@v23
         with:
           files: |
-            '**\.py'
+            **.py
 
       - name: Set up Python
         uses: actions/setup-python@v4
