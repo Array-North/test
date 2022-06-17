@@ -29,6 +29,25 @@ jobs:
           pip install mypy
           
       - name: mypy
+        id: mypy
         continue-on-error: true
         run: |
           mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty
+          
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Build output
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            mypy:
+              ${{join(steps.mypy.outputs.*, '\n')}}
+          edit-mode: replace
