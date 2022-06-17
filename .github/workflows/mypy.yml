@@ -6,10 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Mypy
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v3
         with: 
-          fetch-depth: 2  # OR "2" -> To retrieve the preceding commit.
+          fetch-depth: 2  # To retrieve the preceding commit for changed files step
 
       - name: Get changed files
         id: changed-files
@@ -18,22 +19,16 @@ jobs:
           files: |
             '**.py'
 
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+          
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
           pip install mypy
+          
       - name: mypy
-        continue-on-error: true
         run: |
           mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty
-
