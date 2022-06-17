@@ -17,6 +17,7 @@ jobs:
         with:
           files: |
             **.py
+            **/**.py
 
       - name: Set up Python
         uses: actions/setup-python@v4
