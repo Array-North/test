@@ -32,8 +32,8 @@ jobs:
         id: mypy
         continue-on-error: true
         run: |
-          MYPY_OUTPUT = $(mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty)
-          echo "::set-output name=mypy_output::$MYPY_OUTPUT"
+          mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty 2>&1 | tee mypy-output.log
+          echo "::set-output name=mypy_output::$(cat mypy_output.log)"
           
       - name: Find Comment
         uses: peter-evans/find-comment@v2
