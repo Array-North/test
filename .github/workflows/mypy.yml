@@ -38,6 +38,7 @@ jobs:
           REPORT="${REPORT//$'\n'/'%0A'}"
           REPORT="${REPORT//$'\r'/'%0D'}"
           echo "::set-output name=REPORT::$REPORT"
+          echo "::set-output name=SUMMARY::$(tail -n 1 mypy_output.log)"
           
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -54,7 +55,12 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             mypy:
-              ```
-              ${{ steps.mypy.outputs.REPORT }}
-              ```
+              <details>
+                <summary>
+                  ${{ steps.mypy.outputs.SUMMARY }}
+                </summary>
+                ```
+                  ${{ steps.mypy.outputs.REPORT }}
+                ```
+              </details>
           edit-mode: replace
