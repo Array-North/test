@@ -55,14 +55,10 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             mypy:
-              <details>
-                <summary>
-                  ${{ steps.mypy.outputs.SUMMARY }}
-                </summary>
-                <pre>
-                  <code>
-                    ${{ steps.mypy.outputs.REPORT }}
-                  </code>
-                </pre>
-              </details>
+            <details>
+              <summary>
+                ${{ steps.mypy.outputs.SUMMARY }}
+              </summary>
+              <pre><code>${{ steps.mypy.outputs.REPORT }}</code></pre>
+            </details>
           edit-mode: replace
