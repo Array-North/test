@@ -59,8 +59,10 @@ jobs:
                 <summary>
                   ${{ steps.mypy.outputs.SUMMARY }}
                 </summary>
-                <code>
-                  ${{ steps.mypy.outputs.REPORT }}
-                </code>
+                <pre>
+                  <code>
+                    ${{ steps.mypy.outputs.REPORT }}
+                  </code>
+                </pre>
               </details>
           edit-mode: replace
