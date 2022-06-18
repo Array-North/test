@@ -59,8 +59,8 @@ jobs:
                 <summary>
                   ${{ steps.mypy.outputs.SUMMARY }}
                 </summary>
-                ```
+                <code>
                   ${{ steps.mypy.outputs.REPORT }}
-                ```
+                </code>
               </details>
           edit-mode: replace
