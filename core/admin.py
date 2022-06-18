@@ -1,6 +1,7 @@
 from django.contrib.admin import ModelAdmin, site
 from core.models import MessageModel
 
+#wow
 
 class MessageModelAdmin(ModelAdmin):
     readonly_fields = ('timestamp',)

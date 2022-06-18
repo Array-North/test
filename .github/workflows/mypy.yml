@@ -16,7 +16,8 @@ jobs:
         uses: tj-actions/changed-files@v23
         with:
           files: |
-            '**.py'
+            **.py
+            **/*.py
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,14 +26,19 @@ jobs:
           
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
           pip install mypy
           
       - name: mypy
         id: mypy
         continue-on-error: true
         run: |
-          echo "mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty"
+          mypy ${{ steps.changed-files.outputs.all_changed_files }} --strict --ignore-missing-imports --pretty 2>&1 | tee mypy_output.log
+          REPORT="$(cat mypy_output.log)"
+          REPORT="${REPORT//'%'/'%25'}"
+          REPORT="${REPORT//$'\n'/'%0A'}"
+          REPORT="${REPORT//$'\r'/'%0D'}"
+          echo "::set-output name=REPORT::$REPORT"
+          echo "::set-output name=SUMMARY::$(tail -n 1 mypy_output.log)"
           
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -40,7 +46,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
-          body-includes: Build output
+          body-includes: mypy
 
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v2
@@ -49,5 +55,10 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             mypy:
-              ${{join(steps.mypy.outputs.*, '\n')}}
+            <details>
+              <summary>
+                ${{ steps.mypy.outputs.SUMMARY }}
+              </summary>
+              <pre><code>${{ steps.mypy.outputs.REPORT }}</code></pre>
+            </details>
           edit-mode: replace

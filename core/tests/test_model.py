@@ -3,6 +3,7 @@ from django.test import TestCase
 from core.models import MessageModel
 from django.contrib.auth.models import User
 
+#nice
 
 class MessageTestCase(TestCase):
     """
